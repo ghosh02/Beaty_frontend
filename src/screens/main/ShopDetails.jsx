@@ -1,202 +1,3 @@
-// import React, {useState} from 'react';
-// import {
-//   View,
-//   Text,
-//   Image,
-//   FlatList,
-//   TouchableOpacity,
-//   StyleSheet,
-//   ScrollView,
-// } from 'react-native';
-// import {useDispatch, useSelector} from 'react-redux';
-// import {addService, removeService} from '../../store/selectedServicesSlice'; // Import Redux actions
-// import BackBtn from '../../components/BackBtn';
-// import {Plus} from '../../assets/Icon/IconName';
-
-// const ShopDetails = ({route}) => {
-//   const {
-//     name,
-//     services,
-//     image,
-//     location,
-//     distance,
-//     overview,
-//     priceRange,
-//     rating,
-//     serviceFor,
-//   } = route.params;
-//   const dispatch = useDispatch();
-//   const selectedServices = useSelector(
-//     state => state.selectedServices.selectedServices,
-//   );
-
-//   const isSelected = serviceName => {
-//     return selectedServices.some(service => service.name === serviceName);
-//   };
-
-//   const handleSelectService = service => {
-//     if (isSelected(service.name)) {
-//       dispatch(removeService(service)); // Deselect the service
-//     } else {
-//       dispatch(addService(service)); // Select the service
-//     }
-//   };
-
-//   const renderServiceItem = ({item}) => (
-//     <View style={styles.serviceItem}>
-//       <View
-//         style={{
-//           flex: 1,
-//           flexDirection: 'row',
-//           alignItems: 'flex-start',
-//           gap: 15,
-//         }}>
-//         <Image source={item.img} style={styles.serviceImg} />
-//         <View>
-//           <Text style={styles.serviceName}>{item.name}</Text>
-//           <Text style={styles.serviceDetails}>{item.price}</Text>
-//           <Text style={styles.serviceDetails}>{item.duration}</Text>
-//         </View>
-//       </View>
-//       <TouchableOpacity
-//         style={[
-//           styles.selectButton,
-//           isSelected(item.name) ? styles.selectedButton : {},
-//         ]}
-//         onPress={() => handleSelectService(item)}>
-//         <Text
-//           style={[
-//             styles.selectButtonText,
-//             isSelected(item.name) ? styles.selectedButtonText : {},
-//           ]}>
-//           {isSelected(item.name) ? 'Selected' : 'Select'}
-//         </Text>
-//         {isSelected(item.name) ? '' : <Plus />}
-//       </TouchableOpacity>
-//     </View>
-//   );
-
-//   return (
-//     <View style={styles.container}>
-//       {/* <ScrollView> */}
-//       <Image source={image} style={styles.image} />
-//       <BackBtn />
-//       <View style={styles.shopData}>
-//         <Text style={styles.serviceFor}>{serviceFor}</Text>
-//         <Text style={styles.shopName}>{name}</Text>
-//         <View style={styles.row}>
-//           <Text style={styles.subtext}>{location}</Text>
-//           <View style={styles.dot} />
-//           <Text style={styles.subtext}>{distance}</Text>
-//           <View style={styles.dot} />
-//           <Text style={styles.subtext}>{priceRange}</Text>
-//         </View>
-//       </View>
-//       <View style={{paddingHorizontal: 24}}>
-//         <Text style={styles.sectionTitle}>
-//           Recommended ({services.recommended.length})
-//         </Text>
-//         <FlatList
-//           data={services.recommended}
-//           renderItem={renderServiceItem}
-//           keyExtractor={(item, index) => index.toString()}
-//           style={{marginBottom: 20}}
-//         />
-
-//         {/* Packages */}
-//         {/* <Text style={styles.sectionTitle}>Packages</Text>
-//       <FlatList
-//         data={services.packages}
-//         renderItem={renderServiceItem}
-//         keyExtractor={(item, index) => index.toString()}
-//       /> */}
-
-//         {/* Cart view */}
-//         {selectedServices.length > 0 && (
-//           <View style={styles.cart}>
-//             <Text style={styles.cartText}>
-//               {selectedServices.length} services selected
-//             </Text>
-//             <TouchableOpacity style={styles.continueButton}>
-//               <Text style={styles.continueButtonText}>Continue</Text>
-//             </TouchableOpacity>
-//           </View>
-//         )}
-//         {/* </ScrollView> */}
-//       </View>
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {flex: 1, backgroundColor: '#fff'},
-//   image: {width: '100%', height: 200, marginBottom: 20},
-//   shopName: {fontSize: 24, fontWeight: 'bold', color: '#fff'},
-//   serviceFor: {
-//     fontSize: 10,
-//     textTransform: 'uppercase',
-//     fontWeight: 'bold',
-//     color: '#fff',
-//   },
-//   subtext: {color: '#fff', fontSize: 14},
-//   row: {flexDirection: 'row', alignItems: 'center', gap: 5, marginTop: 10},
-//   dot: {width: 5, height: 5, borderRadius: 5, backgroundColor: '#fff'},
-//   sectionTitle: {fontSize: 20, fontWeight: 'bold', marginTop: 20},
-//   shopData: {
-//     position: 'absolute',
-//     top: 115,
-//     left: 24,
-//   },
-//   serviceItem: {
-//     flexDirection: 'row',
-//     alignItems: 'flex-start',
-//     justifyContent: 'space-between',
-//     marginBottom: 20,
-//     padding: 10,
-//   },
-//   serviceName: {
-//     fontSize: 16,
-//     color: '#1C1C28',
-//     fontFamily: 'SpaceGrotesk-Bold',
-//   },
-//   serviceDetails: {fontSize: 14, color: '#666'},
-//   selectButton: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     gap: 10,
-//     paddingVertical: 4,
-//     paddingHorizontal: 10,
-//     borderRadius: 5,
-//     alignItems: 'center',
-//     borderWidth: 1,
-//     borderColor: '#6440FE',
-//   },
-//   serviceImg: {
-//     width: 75,
-//     height: 75,
-//     borderRadius: 8,
-//     objectFit: 'cover',
-//   },
-//   selectedButton: {backgroundColor: '#6440FE'}, // Change color when selected
-//   selectButtonText: {color: '#6440FE', fontFamily: 'SpaceGrotesk-Regular'},
-//   selectedButtonText: {color: '#fff', fontFamily: 'SpaceGrotesk-Regular'},
-//   cart: {
-//     position: 'absolute',
-//     bottom: 0,
-//     left: 0,
-//     right: 0,
-//     padding: 20,
-//     backgroundColor: '#6440FE',
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//   },
-//   cartText: {color: '#fff', fontSize: 16},
-//   continueButton: {backgroundColor: 'red', padding: 10, borderRadius: 5},
-//   continueButtonText: {color: '#6440FE', fontWeight: 'bold'},
-// });
-
-// export default ShopDetails;
-
 import React, {useState} from 'react';
 import {
   View,
@@ -206,11 +7,15 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  Linking,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {addService, removeService} from '../../store/selectedServicesSlice'; // Import Redux actions
+import {addService, removeService} from '../../store/selectedServicesSlice';
 import BackBtn from '../../components/BackBtn';
 import {Call, Location, Plus, Share, Star} from '../../assets/Icon/IconName';
+import {useNavigation} from '@react-navigation/native';
+import TotalAmount from '../../components/TotalAmount';
+import ShareModule from 'react-native-share';
 
 const ShopDetails = ({route}) => {
   const {
@@ -222,9 +27,13 @@ const ShopDetails = ({route}) => {
     priceRange,
     rating,
     serviceFor,
+    shopId,
+    phoneNumber,
+    googleMapsUrl,
   } = route.params;
 
   const dispatch = useDispatch();
+  const navigation = useNavigation();
   const selectedServices = useSelector(
     state => state.selectedServices.selectedServices,
   );
@@ -239,21 +48,66 @@ const ShopDetails = ({route}) => {
     {key: 'offers', label: 'Offers', data: services.offers || []},
     {key: 'combos', label: 'Combos', data: services.combos || []},
   ];
-  console.log(services.recommended);
-  // Check if a service is selected by its id
+
   const isSelected = serviceId => {
     return selectedServices.some(service => service.id === serviceId);
   };
 
-  // Handle selecting or deselecting a service by its id
   const handleSelectService = service => {
+    const serviceWithShopIdAndDetails = {
+      ...service,
+      shopId,
+      shopDetails: {
+        name,
+        location,
+        distance,
+        priceRange,
+        rating,
+        serviceFor,
+      }, // Include the entire shop details here
+    };
+
     if (isSelected(service.id)) {
-      dispatch(removeService(service));
+      dispatch(removeService(serviceWithShopIdAndDetails)); // Pass the updated service object
     } else {
-      dispatch(addService(service));
+      dispatch(addService(serviceWithShopIdAndDetails)); // Pass the updated service object
     }
   };
+
   const totalPrice = useSelector(state => state.selectedServices.totalPrice);
+  // Function to open Google Maps
+  const handleDirections = () => {
+    if (googleMapsUrl) {
+      Linking.openURL(googleMapsUrl).catch(err =>
+        console.error('Error opening Google Maps:', err),
+      );
+    } else {
+      alert('Google Maps URL is not available.');
+    }
+  };
+  //handle call
+  const handleCall = () => {
+    if (phoneNumber) {
+      Linking.openURL(`tel:${phoneNumber}`).catch(err =>
+        console.error('Error making the call:', err),
+      );
+    } else {
+      alert('Phone number is not available.');
+    }
+  };
+  //handle share
+  const handleShare = async () => {
+    try {
+      const shareOptions = {
+        title: 'Check out this shop!',
+        message: `Check out ${name} located at ${location}. Rated ${rating} stars!`,
+        // url: image.https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg,
+      };
+      await ShareModule.open(shareOptions);
+    } catch (error) {
+      console.error('Error sharing:', error);
+    }
+  };
   const renderServiceItem = ({item}) => (
     <View style={styles.serviceItem}>
       <View
@@ -292,7 +146,19 @@ const ShopDetails = ({route}) => {
   // Get services based on active filter
   const currentServices =
     serviceFilters.find(filter => filter.key === activeFilter)?.data || [];
-
+  const handleContinue = () => {
+    navigation.navigate('Checkout', {
+      name,
+      services,
+      image,
+      location,
+      distance,
+      priceRange,
+      rating,
+      serviceFor,
+      shopId,
+    });
+  };
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
@@ -307,25 +173,31 @@ const ShopDetails = ({route}) => {
         <View style={styles.row}>
           <Text style={styles.subtext}>{location}</Text>
           <View style={styles.dot} />
-          <Text style={styles.subtext}>{distance}</Text>
+          <Text style={styles.subtext}>{distance} kms</Text>
           <View style={styles.dot} />
           <Text style={styles.subtext}>{priceRange}</Text>
         </View>
       </View>
       <View style={styles.contactContainer}>
         <View style={styles.contact}>
-          <View style={styles.contactTextContainer}>
+          <TouchableOpacity
+            style={styles.contactTextContainer}
+            onPress={handleCall}>
             <Call />
             <Text style={styles.contactTitle}>Call</Text>
-          </View>
-          <View style={styles.contactTextContainer}>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.contactTextContainer}
+            onPress={handleDirections}>
             <Location />
             <Text style={styles.contactTitle}>Directions</Text>
-          </View>
-          <View style={styles.contactTextContainer}>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.contactTextContainer}
+            onPress={handleShare}>
             <Share />
             <Text style={styles.contactTitle}>Share</Text>
-          </View>
+          </TouchableOpacity>
         </View>
         <View>
           <View style={styles.rating}>
@@ -377,27 +249,21 @@ const ShopDetails = ({route}) => {
           showsVerticalScrollIndicator={false}
           data={currentServices}
           renderItem={renderServiceItem}
-          keyExtractor={(item, index) => item.id.toString()} // Use item.id as key
-          style={{marginBottom: 20}}
+          keyExtractor={(item, index) => item.id.toString()}
+          contentContainerStyle={{
+            paddingBottom: selectedServices.length > 0 ? 60 : 0,
+          }}
         />
 
         {/* Cart view */}
         <View>
           {selectedServices.length > 0 && (
-            <View style={styles.cart}>
-              <View style={styles.cartPriceContainer}>
-                <View style={styles.cartTextContainer}>
-                  <Text style={styles.cartText}>{selectedServices.length}</Text>
-                </View>
-                <View>
-                  <Text style={styles.cartText}>$ {totalPrice}</Text>
-                  <Text style={{fontSize: 14, color: '#fff'}}>plus taxes</Text>
-                </View>
-              </View>
-              <TouchableOpacity>
-                <Text style={styles.continueButtonText}>Continue</Text>
-              </TouchableOpacity>
-            </View>
+            <TotalAmount
+              title="Continue"
+              length={selectedServices.length}
+              totalPrice={totalPrice}
+              press={handleContinue}
+            />
           )}
         </View>
       </View>

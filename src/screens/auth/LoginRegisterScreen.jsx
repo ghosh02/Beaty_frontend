@@ -118,6 +118,7 @@ const LoginRegisterScreen = () => {
             <Text style={styles.title}>Email Address</Text>
             <TextInput
               placeholder="Enter your email or phone"
+              placeholderTextColor="#9EA1AE"
               style={styles.input}
               onChangeText={text => handleLoginInputChange('email', text)}
               value={loginData.email}
@@ -126,7 +127,8 @@ const LoginRegisterScreen = () => {
             <View style={styles.passwordContainer}>
               <TextInput
                 placeholder="Enter your password"
-                style={{flex: 1}}
+                placeholderTextColor="#9EA1AE"
+                style={{flex: 1, color: '#9EA1AE'}}
                 secureTextEntry={!showPassword}
                 onChangeText={text => handleLoginInputChange('password', text)}
                 value={loginData.password}
@@ -173,7 +175,7 @@ const LoginRegisterScreen = () => {
             showsVerticalScrollIndicator={false}>
             <Text style={styles.title}>Create Your Account</Text>
             <Text style={styles.subtitle}>
-              Make sure that you already have an account.
+              Make sure your account keep secure.
             </Text>
             <Text style={styles.title}>Username</Text>
             <TextInput
@@ -196,7 +198,8 @@ const LoginRegisterScreen = () => {
             <View style={styles.passwordContainer}>
               <TextInput
                 placeholder="Enter your password"
-                style={{flex: 1}}
+                placeholderTextColor="#9EA1AE"
+                style={{flex: 1, color: '#9EA1AE'}}
                 secureTextEntry={!showPassword}
                 onChangeText={text =>
                   handleRegisterInputChange('password', text)

@@ -11,11 +11,40 @@ import {
 import {DownIcon, Star} from '../../assets/Icon/IconName';
 import BackBtn from '../../components/BackBtn';
 import {useNavigation} from '@react-navigation/native';
+import carpenter from '../../assets/newimg/carpentermain.png';
+import plumber from '../../assets/newimg/plumbermain.png';
+import menbeauty from '../../assets/newimg/menbeautymain.png';
+import electrician from '../../assets/newimg/electricianmain.png';
+import bikemechanic from '../../assets/newimg/bikemechanicmain.png';
+import acmechanic from '../../assets/newimg/acmechanicmain.png';
 
 const ServiceDetail = ({route}) => {
   const navigation = useNavigation();
   const {title, image, shops} = route.params;
+  const getImageBasedOnTitle = title => {
+    switch (title) {
+      case 'Men Beauty':
+        return menbeauty;
+      case 'Women Beauty':
+        return menbeauty;
+      case 'Bike Mechanic':
+        return bikemechanic;
+      case 'Car Mechanic':
+        return bikemechanic;
+      case 'Electrician':
+        return electrician;
+      case 'AC & Refrigerator':
+        return acmechanic;
+      case 'Carpenter':
+        return carpenter;
+      case 'Plumber':
+        return plumber;
+      default:
+        return image;
+    }
+  };
 
+  const selectedImage = getImageBasedOnTitle(title);
   const handleShopDetails = item => {
     navigation.navigate('ShopDetails', {
       ...item,
@@ -23,40 +52,41 @@ const ServiceDetail = ({route}) => {
   };
   return (
     <View style={styles.container}>
-      {/* <ScrollView showsVerticalScrollIndicator={false}> */}
       <View style={styles.imageContainer}>
-        <Image source={image} style={styles.image} />
+        <Image source={selectedImage} style={styles.image} />
 
         <View style={styles.overlay} />
       </View>
       <BackBtn />
       <Text style={styles.title}>{title}</Text>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.filterContainer}>
-        <TouchableOpacity style={styles.filterButton}>
-          <Text style={styles.filterText}>Gender</Text>
-          <DownIcon />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.filterButton}>
-          <Text style={styles.filterText}>Price</Text>
-          <DownIcon />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.filterButton}>
-          <Text style={styles.filterText}>Offers</Text>
-          <DownIcon />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.filterButton}>
-          <Text style={styles.filterText}>Rating</Text>
-          <DownIcon />
-        </TouchableOpacity>
-      </ScrollView>
+      <View style={{marginHorizontal: 24}}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.filterContainer}>
+          <TouchableOpacity style={styles.filterButton}>
+            <Text style={styles.filterText}>Gender</Text>
+            <DownIcon />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.filterButton}>
+            <Text style={styles.filterText}>Price</Text>
+            <DownIcon />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.filterButton}>
+            <Text style={styles.filterText}>Offers</Text>
+            <DownIcon />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.filterButton}>
+            <Text style={styles.filterText}>Rating</Text>
+            <DownIcon />
+          </TouchableOpacity>
+        </ScrollView>
+      </View>
       <FlatList
         showsVerticalScrollIndicator={false}
         data={shops}
         contentContainerStyle={{paddingHorizontal: 24}}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={item => item.shopId.toString()}
         renderItem={({item}) => (
           <TouchableOpacity
             style={{marginVertical: 20}}
@@ -66,18 +96,18 @@ const ServiceDetail = ({route}) => {
             <Text style={styles.listTitle}>{item.name}</Text>
             <View style={styles.row}>
               <Text style={styles.subtext}>{item.overview}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.subtext}>{item.location}</Text>
+              <View style={styles.dot} />
+              <Text style={styles.subtext}>{item.distance} kms</Text>
+              <View style={styles.dot} />
+              <Text style={styles.subtext}>{item.priceRange}</Text>
               <View style={styles.dot} />
               <View style={[styles.row, {gap: 5}]}>
                 <Star />
                 <Text style={styles.subtext}>{item.rating}</Text>
               </View>
-            </View>
-            <View style={styles.row}>
-              <Text style={styles.subtext}>{item.location}</Text>
-              <View style={styles.dot} />
-              <Text style={styles.subtext}>{item.distance}</Text>
-              <View style={styles.dot} />
-              <Text style={styles.subtext}>{item.priceRange}</Text>
             </View>
           </TouchableOpacity>
         )}
@@ -186,10 +216,10 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
-  row: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
+  // row: {
+  //   flexDirection: 'row',
+  //   flexWrap: 'wrap',
+  // },
   shopDetails: {
     fontSize: 14,
     color: '#888',

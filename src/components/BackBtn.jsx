@@ -4,13 +4,13 @@ import {useNavigation} from '@react-navigation/native';
 
 import {Back} from '../assets/Icon/IconName';
 
-const BackBtn = () => {
+const BackBtn = ({color}) => {
   const navigation = useNavigation();
   return (
     <TouchableOpacity
       onPress={() => navigation.goBack()}
       style={{zIndex: 10, position: 'absolute', top: 20, left: 24}}>
-      <Back />
+      <Back color={color} />
     </TouchableOpacity>
   );
 };

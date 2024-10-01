@@ -20,6 +20,7 @@ const ForgotPassword = () => {
 
   return (
     <View style={styles.container}>
+      {/* <ConfettiAnimation /> */}
       <Image
         source={require('../../assets/images/logo.png')}
         style={styles.logo}
