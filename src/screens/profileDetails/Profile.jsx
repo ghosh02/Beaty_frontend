@@ -41,7 +41,7 @@ const menuItems = [
     title: 'Notifications',
     subtitle: 'View your past notifications',
     icon: 'bell-outline',
-    navigateTo: 'Home',
+    navigateTo: 'Notification',
   },
   {
     id: '5',

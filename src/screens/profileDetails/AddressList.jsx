@@ -50,7 +50,7 @@ const AddressList = ({navigation}) => {
         return [];
     }
   };
-  const renderOrderItem = ({item}) => (
+  const renderAddressItem = ({item}) => (
     <View style={styles.addressContainer}>
       <View style={styles.iconContainer}>{getIcon(item.type)}</View>
       <View style={styles.addressDataContainer}>
@@ -86,7 +86,7 @@ const AddressList = ({navigation}) => {
         <>
           <FlatList
             data={addresses}
-            renderItem={renderOrderItem}
+            renderItem={renderAddressItem}
             keyExtractor={item => item.id}
             style={styles.orderList}
             showsVerticalScrollIndicator={false}

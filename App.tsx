@@ -25,6 +25,7 @@ import ConfettiAnimation from './src/components/ConfettiAnimation';
 import AddressList from './src/screens/profileDetails/AddressList';
 import AddressForm from './src/screens/profileDetails/AddressForm';
 import About from './src/screens/profileDetails/About';
+import Notification from './src/screens/profileDetails/Notification';
 
 const Stack = createNativeStackNavigator();
 
@@ -61,6 +62,7 @@ function App() {
           <Stack.Screen name="AddressList" component={AddressList} />
           <Stack.Screen name="AddressForm" component={AddressForm} />
           <Stack.Screen name="About" component={About} />
+          <Stack.Screen name="Notification" component={Notification} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
