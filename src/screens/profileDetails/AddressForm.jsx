@@ -29,7 +29,7 @@ const AddressForm = ({navigation}) => {
     street: '',
     pinCode: '',
     state: '',
-    label: 'Home',
+    type: 'Home',
   });
 
   useEffect(() => {
@@ -97,23 +97,28 @@ const AddressForm = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.mapContainer}></View>
-      <ScrollView contentContainerStyle={styles.addressScroll}>
+      <ScrollView
+        contentContainerStyle={styles.addressScroll}
+        showsVerticalScrollIndicator={false}>
         <Text style={styles.title}>Address</Text>
         <TextInput
+          placeholderTextColor="#6B6E82"
           style={styles.input}
           placeholder="Street"
           value={address.street}
           onChangeText={text => setAddress({...address, street: text})}
         />
-        <Text style={styles.title}>Address</Text>
+        <Text style={styles.title}>Pin code</Text>
         <TextInput
+          placeholderTextColor="#6B6E82"
           style={styles.input}
           placeholder="Pin Code"
           value={address.pinCode}
           onChangeText={text => setAddress({...address, pinCode: text})}
         />
-        <Text style={styles.title}>Address</Text>
+        <Text style={styles.title}>State</Text>
         <TextInput
+          placeholderTextColor="#6B6E82"
           style={styles.input}
           placeholder="State"
           value={address.state}
@@ -124,19 +129,16 @@ const AddressForm = ({navigation}) => {
           {['Home', 'Work', 'Other'].map(labelOption => (
             <TouchableOpacity
               key={labelOption}
-              onPress={() => setAddress({...address, label: labelOption})}
-              style={{
-                backgroundColor:
-                  address.label === labelOption ? 'blue' : '#F0F5FA',
-
-                padding: 15,
-                borderRadius: 5,
-                margin: 5,
-              }}>
+              onPress={() => setAddress({...address, type: labelOption})}
+              style={[
+                styles.addressType,
+                address.type === labelOption && styles.selectedAddressType,
+              ]}>
               <Text
-                style={{
-                  color: address.label === labelOption ? '#fff' : '#32343E',
-                }}>
+                style={[
+                  styles.addressText,
+                  address.type === labelOption && styles.selectedAddressText,
+                ]}>
                 {labelOption}
               </Text>
             </TouchableOpacity>
@@ -147,7 +149,7 @@ const AddressForm = ({navigation}) => {
             <Text>Use current location</Text>
           </TouchableOpacity> */}
 
-        <Btn label="Save Address" Press={handleSave} />
+        <Btn label="Save Address" press={handleSave} />
       </ScrollView>
     </View>
   );
@@ -155,7 +157,6 @@ const AddressForm = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 24,
     backgroundColor: '#fff',
   },
 
@@ -164,7 +165,7 @@ const styles = StyleSheet.create({
     height: 300,
   },
   addressScroll: {
-    paddingHorizontal: 24,
+    padding: 24,
   },
   title: {
     fontSize: 16,
@@ -178,9 +179,29 @@ const styles = StyleSheet.create({
     color: '#9EA1AE',
     fontFamily: 'SpaceGrotesk-Regular',
     padding: 14,
-    borderRadius: 12,
-    marginBottom: 16,
+    borderRadius: 8,
+    marginBottom: 15,
+    fontSize: 16,
     backgroundColor: '#F0F5FA',
+  },
+  addressType: {
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    borderRadius: 8,
+    marginRight: 20,
+    marginBottom: 30,
+    backgroundColor: '#F0F5FA',
+  },
+  selectedAddressType: {
+    backgroundColor: '#6440FE',
+  },
+  addressText: {
+    color: '#32343E',
+    fontSize: 14,
+  },
+  selectedAddressText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });
 export default AddressForm;

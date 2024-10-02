@@ -22,7 +22,7 @@ const AddCardScreen = ({navigation}) => {
     setCardNumber(text);
 
     const detectedCardType = getCard(text);
-    console.log('detectedCardType', detectedCardType);
+    // console.log('detectedCardType', detectedCardType);
     setCardType(detectedCardType);
   };
   // console.log(cardType);

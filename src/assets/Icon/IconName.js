@@ -19,12 +19,16 @@ export const DownIcon = () => {
     <Icons.EvilIcons name={'chevron-down'} size={24} color={Colors.Black} />
   );
 };
+
 export const SearchIcon = ({size = 18, Color = '#fff'}) => {
   return <Icons.Feather name={'search'} color={Color} size={size} />;
 };
 
 export const RightIcon = ({color = '#6440FE'}) => {
   return <Icons.Entypo name={'chevron-small-right'} size={25} color={color} />;
+};
+export const Down = ({color = '#000'}) => {
+  return <Icons.Entypo name={'chevron-small-down'} size={25} color={color} />;
 };
 export const Star = ({color = '#8F90A6'}) => {
   return <Icons.Feather name={'star'} size={16} color={color} />;
@@ -75,4 +79,21 @@ export const Person = ({color = '#000'}) => {
   return (
     <Icons.Ionicons name={'person-circle-outline'} size={28} color={color} />
   );
+};
+export const Home = ({color = '#2790C3'}) => {
+  return <Icons.Feather name={'home'} size={28} color={color} />;
+};
+export const Edit = ({color = '#6440FE'}) => {
+  return <Icons.Feather name={'edit'} size={18} color={color} />;
+};
+export const Delete = () => {
+  return <Icons.AntDesign name={'delete'} size={18} color="#E53535" />;
+};
+export const Work = () => {
+  return (
+    <Icons.MaterialIcons name={'work-outline'} size={28} color="#A03BB1" />
+  );
+};
+export const AddCircle = ({color = '#6440FE'}) => {
+  return <Icons.Ionicons name={'add-circle-outline'} size={28} color={color} />;
 };

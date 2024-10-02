@@ -1,5 +1,5 @@
 // ProfileModal.js
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -7,9 +7,11 @@ import {
   TouchableOpacity,
   FlatList,
   Image,
+  Modal,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {RightIcon} from '../../assets/Icon/IconName';
+import {BlurView} from '@react-native-community/blur';
 
 // Define the list of menu items
 const menuItems = [
@@ -46,29 +48,28 @@ const menuItems = [
     title: 'About',
     subtitle: 'Privacy Policy, Terms of Services, Licenses',
     icon: 'information-outline',
-    navigateTo: 'Home',
+    navigateTo: 'About',
   },
   {
     id: '6',
     title: 'Logout',
     subtitle: '',
     icon: 'logout',
-    navigateTo: 'Home',
     color: '#E53535',
   },
 ];
 
 // Main Profile Modal component
 const Profile = ({navigation}) => {
-  // Render individual menu items
   const renderItem = ({item}) => (
     <TouchableOpacity
       style={styles.menuItem}
       onPress={() => {
         if (item.title === 'Logout') {
-          navigation.goBack();
+          setModalVisible(true);
+        } else {
+          navigation.navigate(item.navigateTo);
         }
-        navigation.navigate(item.navigateTo);
       }}>
       <Icon name={item.icon} size={24} color={item.color || '#000'} />
       <View style={styles.menuContent}>
@@ -82,6 +83,7 @@ const Profile = ({navigation}) => {
       <RightIcon color="#000" />
     </TouchableOpacity>
   );
+  const [isModalVisible, setModalVisible] = useState(false);
 
   return (
     <View style={styles.container}>
@@ -112,6 +114,40 @@ const Profile = ({navigation}) => {
         keyExtractor={item => item.id}
         contentContainerStyle={styles.listContainer}
       />
+      <Modal
+        visible={isModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setModalVisible(false)}>
+        <BlurView
+          style={styles.blurConatiner}
+          blurType="Light"
+          blurAmount={1}
+        />
+
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Delete Address?</Text>
+            <Text style={styles.modalDescription}>
+              Are you want to log out?
+            </Text>
+
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                onPress={() => setModalVisible(false)}
+                style={styles.cancelButton}>
+                <Text style={styles.cancelButtonText}>Cancel</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                // onPress={confirmDelete}
+                style={styles.deleteButton}>
+                <Text style={styles.deleteButtonText}>Log out</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -180,6 +216,64 @@ const styles = StyleSheet.create({
   menuSubtitle: {
     fontSize: 10,
     color: '#8F90A6',
+  },
+  blurConatiner: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    paddingVertical: 30,
+    paddingHorizontal: 20,
+    width: '100%',
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#1C1C28',
+  },
+  modalDescription: {
+    fontSize: 16,
+    marginBottom: 20,
+    textAlign: 'center',
+    color: '#8F90A6',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  cancelButton: {
+    backgroundColor: '#f0f0f0',
+    padding: 10,
+    borderRadius: 5,
+    width: '45%',
+    alignItems: 'center',
+  },
+  cancelButtonText: {
+    color: '#000',
+    fontWeight: 'bold',
+  },
+  deleteButton: {
+    backgroundColor: '#FF3B30',
+    padding: 10,
+    borderRadius: 5,
+    width: '40%',
+    alignItems: 'center',
+  },
+  deleteButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });
 

@@ -10,7 +10,7 @@ import {
 import {useSelector, useDispatch} from 'react-redux';
 import {setDefaultCard} from '../../store/cardSlice';
 import BackButton from '../../components/BackButton';
-import {Plus} from '../../assets/Icon/IconName';
+import {AddCircle, Plus} from '../../assets/Icon/IconName';
 import VisaLogo from '../../assets/images/visa.png';
 import MasterCardLogo from '../../assets/images/mastercard.png';
 import AmexLogo from '../../assets/images/amex.png';
@@ -87,11 +87,11 @@ const PaymentMethodScreen = ({navigation}) => {
           <BackButton color={'#000'} />
           <Text style={styles.title}>Payment Methods</Text>
         </View>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('AddCard')}
-          style={styles.addCard}>
-          <Plus color="#000" />
-        </TouchableOpacity>
+        {cards.length > 0 && (
+          <TouchableOpacity onPress={() => navigation.navigate('AddCard')}>
+            <AddCircle color="#000" />
+          </TouchableOpacity>
+        )}
       </View>
       {cards.length > 0 ? (
         <FlatList
@@ -101,13 +101,14 @@ const PaymentMethodScreen = ({navigation}) => {
           keyExtractor={item => item.id.toString()}
         />
       ) : (
-        <View style={styles.noCardsContainer}>
-          <Text style={styles.noCardsText}>No Cards Added</Text>
-          <Btn
-            label="Add Now"
-            width="50%"
-            press={() => navigation.navigate('AddCard')}
-          />
+        <View style={styles.emptyMessageContainer}>
+          <Text style={styles.emptyMessage}>No Card Added</Text>
+          <TouchableOpacity
+            style={styles.addContainer}
+            onPress={() => navigation.navigate('AddCard')}>
+            <AddCircle />
+            <Text style={styles.addText}>Add Now</Text>
+          </TouchableOpacity>
         </View>
       )}
     </View>
@@ -211,16 +212,25 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   addButtonText: {fontSize: 30, color: 'white'},
-  noCardsContainer: {
+
+  emptyMessageContainer: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
-    gap: 15,
+    justifyContent: 'center',
   },
-  noCardsText: {
-    fontSize: 20,
-    color: '#1C1C28',
-    fontWeight: 'bold',
+  emptyMessage: {
+    textAlign: 'center',
+    marginVertical: 10,
+    color: '#6e6e6e',
+  },
+  addContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  addText: {
+    fontSize: 16,
+    color: '#6440FE',
   },
 });
 
