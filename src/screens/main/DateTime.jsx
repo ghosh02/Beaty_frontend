@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Modal,
   Image,
+  SafeAreaView,
 } from 'react-native';
 import TotalAmount from '../../components/TotalAmount';
 import BackButton from '../../components/BackButton';
@@ -130,7 +131,7 @@ const DateTime = () => {
     setSelectedTime(null);
   };
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {showConfetti && <ConfettiAnimation />}
       <View style={styles.headerContainer}>
         <BackButton color="#1C1C28" />
@@ -245,34 +246,35 @@ const DateTime = () => {
           </View>
         </View>
       </Modal>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    paddingHorizontal: 24,
+    paddingVertical: 15,
     backgroundColor: '#fff',
   },
   headerContainer: {
     flexDirection: 'row',
-    gap: 20,
+    gap: 10,
     alignItems: 'center',
     marginBottom: 24,
   },
   header: {
-    fontSize: 24,
+    fontSize: 20,
     color: '#1C1C28',
     fontWeight: 'bold',
   },
   title: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
   },
   subtitle: {
-    fontSize: 19,
+    fontSize: 18,
     color: '#1C1C28',
     fontWeight: 'bold',
   },

@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
+  SafeAreaView,
 } from 'react-native';
 import Btn from '../../components/Btn';
 import {useNavigation} from '@react-navigation/native';
@@ -19,29 +20,31 @@ const ForgotPassword = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/* <ConfettiAnimation /> */}
-      <Image
-        source={require('../../assets/images/logo.png')}
-        style={styles.logo}
-      />
-      <Text style={styles.title}>Forgot Password</Text>
-      <Text style={styles.subtitle}>
-        Please enter your email to reset the password
-      </Text>
+      <View style={styles.inputContainer}>
+        <Image
+          source={require('../../assets/images/logo.png')}
+          style={styles.logo}
+        />
+        <Text style={styles.title}>Forgot Password</Text>
+        <Text style={styles.subtitle}>
+          Please enter your email to reset the password
+        </Text>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Your email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-      />
+        <TextInput
+          style={styles.input}
+          placeholder="Your email"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+        />
+      </View>
       <Btn
         label={'Reset Password'}
         press={() => navigation.navigate('OtpVerify', {email})}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -49,8 +52,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    paddingHorizontal: 24,
+    paddingVertical: 15,
+  },
+  inputContainer: {
+    flex: 1,
     alignItems: 'center',
-    padding: 20,
   },
   logo: {
     width: 100,

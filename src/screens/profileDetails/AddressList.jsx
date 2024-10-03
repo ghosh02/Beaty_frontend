@@ -6,11 +6,13 @@ import {
   StyleSheet,
   FlatList,
   Modal,
+  SafeAreaView,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {setSelectedAddress, deleteAddress} from '../../store/addressSlice';
 import {
   AddCircle,
+  CloseIcon,
   Delete,
   Edit,
   Home,
@@ -19,6 +21,7 @@ import {
 } from '../../assets/Icon/IconName';
 import Btn from '../../components/Btn';
 import {BlurView} from '@react-native-community/blur';
+import BackButton from '../../components/BackButton';
 
 const AddressList = ({navigation}) => {
   const [isModalVisible, setModalVisible] = useState(false);
@@ -73,40 +76,29 @@ const AddressList = ({navigation}) => {
     </View>
   );
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <LeftIcon />
-        </TouchableOpacity>
-
+        <BackButton color="#000" />
         <Text style={styles.title}>My Address</Text>
       </View>
 
       {addresses.length > 0 ? (
-        <>
-          <FlatList
-            data={addresses}
-            renderItem={renderAddressItem}
-            keyExtractor={item => item.id}
-            style={styles.orderList}
-            showsVerticalScrollIndicator={false}
-          />
-          <Btn
-            label="Add New Address"
-            press={() => navigation.navigate('AddressForm')}
-          />
-        </>
+        <FlatList
+          data={addresses}
+          renderItem={renderAddressItem}
+          keyExtractor={item => item.id}
+          style={styles.orderList}
+          showsVerticalScrollIndicator={false}
+        />
       ) : (
         <View style={styles.emptyMessageContainer}>
           <Text style={styles.emptyMessage}>No Address Added</Text>
-          <TouchableOpacity
-            style={styles.addContainer}
-            onPress={() => navigation.navigate('AddressForm')}>
-            <AddCircle />
-            <Text style={styles.addText}>Add Now</Text>
-          </TouchableOpacity>
         </View>
       )}
+      <Btn
+        label="Add New Address"
+        press={() => navigation.navigate('AddressForm')}
+      />
       <Modal
         visible={isModalVisible}
         transparent={true}
@@ -120,7 +112,12 @@ const AddressList = ({navigation}) => {
 
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Delete Address?</Text>
+            <View style={styles.modalCloseButton}>
+              <Text style={styles.modalTitle}>Delete Address?</Text>
+              <TouchableOpacity onPress={() => setModalVisible(false)}>
+                <CloseIcon />
+              </TouchableOpacity>
+            </View>
             <Text style={styles.modalDescription}>
               Are you want to delete this address?
             </Text>
@@ -141,14 +138,15 @@ const AddressList = ({navigation}) => {
           </View>
         </View>
       </Modal>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
+    paddingHorizontal: 24,
+    paddingVertical: 15,
     backgroundColor: '#fff',
   },
   header: {
@@ -237,21 +235,25 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: '#fff',
-    paddingVertical: 30,
-    paddingHorizontal: 20,
+    paddingTop: 15,
+    paddingHorizontal: 24,
+    paddingBottom: 30,
     width: '100%',
-    alignItems: 'center',
   },
   modalTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 20,
     color: '#1C1C28',
+  },
+  modalCloseButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   modalDescription: {
     fontSize: 16,
     marginBottom: 20,
-    textAlign: 'center',
     color: '#8F90A6',
   },
   buttonContainer: {
@@ -260,19 +262,21 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   cancelButton: {
-    backgroundColor: '#f0f0f0',
-    padding: 10,
+    paddingVertical: 15,
     borderRadius: 5,
-    width: '45%',
+    borderWidth: 1,
+    borderColor: '#6440FE',
+    width: '40%',
     alignItems: 'center',
   },
   cancelButtonText: {
-    color: '#000',
+    color: '#6440FE',
     fontWeight: 'bold',
+    fontSize: 16,
   },
   deleteButton: {
     backgroundColor: '#FF3B30',
-    padding: 10,
+    paddingVertical: 15,
     borderRadius: 5,
     width: '40%',
     alignItems: 'center',
@@ -280,6 +284,7 @@ const styles = StyleSheet.create({
   deleteButtonText: {
     color: '#fff',
     fontWeight: 'bold',
+    fontSize: 16,
   },
 });
 export default AddressList;

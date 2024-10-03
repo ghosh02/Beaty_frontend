@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
+  SafeAreaView,
 } from 'react-native';
 import Btn from '../../components/Btn';
 import CustomOTPFleld from '../../components/CustomOTPFleld';
@@ -16,26 +17,28 @@ const OtpVerify = ({route}) => {
   const {email} = route.params;
 
   return (
-    <View style={styles.container}>
-      <Image
-        source={require('../../assets/images/logo.png')}
-        style={styles.logo}
-      />
-      <Text style={styles.title}>Forgot Password</Text>
-      <Text style={styles.subtitle}>
-        We sent a reset link to{' '}
-        <Text style={{fontFamily: 'SpaceGrotesk-Bold', color: '#000'}}>
-          {email}
-        </Text>{' '}
-        enter 4 digit code that mentioned in the email
-      </Text>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.inputContainer}>
+        <Image
+          source={require('../../assets/images/logo.png')}
+          style={styles.logo}
+        />
+        <Text style={styles.title}>Forgot Password</Text>
+        <Text style={styles.subtitle}>
+          We sent a reset link to{' '}
+          <Text style={{fontFamily: 'SpaceGrotesk-Bold', color: '#000'}}>
+            {email}
+          </Text>{' '}
+          enter 4 digit code that mentioned in the email
+        </Text>
 
-      <CustomOTPFleld />
+        <CustomOTPFleld />
+      </View>
       <Btn
         label={'Verify code'}
         press={() => navigation.navigate('ChangePassword')}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -43,8 +46,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    paddingHorizontal: 24,
+    paddingVertical: 15,
+  },
+  inputContainer: {
+    flex: 1,
     alignItems: 'center',
-    padding: 20,
   },
   logo: {
     width: 100,
@@ -55,7 +62,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontFamily: 'SpaceGrotesk-Bold',
-    marginBottom: 50,
+    marginBottom: 10,
     color: '#130D0E',
   },
   subtitle: {
@@ -63,7 +70,6 @@ const styles = StyleSheet.create({
     color: '#A9A2A3',
     lineHeight: 25,
     fontFamily: 'SpaceGrotesk-Regular',
-    marginBottom: 20,
     textAlign: 'center',
   },
 });

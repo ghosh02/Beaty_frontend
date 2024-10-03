@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Image,
+  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -12,22 +13,89 @@ import {Camera, LeftIcon} from '../../assets/Icon/IconName';
 import profile from '../../assets/images/mainprofile.png';
 import Btn from '../../components/Btn';
 import {useNavigation} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
+import {setProfileData, updateProfileImage} from '../../store/profileSlice';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import BackButton from '../../components/BackButton';
 
 const EditProfile = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+
+  // Fetch profile data from Redux store
+  const profileData = useSelector(state => state.profile);
+
+  // Local state to manage the entire profile data
+  const [updatedProfile, setUpdatedProfile] = useState({
+    username: profileData.username,
+    email: profileData.email,
+    phoneNumber: profileData.phoneNumber,
+    profileImage: profileData.profileImage,
+  });
+  const handleInputChange = (field, value) => {
+    setUpdatedProfile({
+      ...updatedProfile,
+      [field]: value,
+    });
+  };
+
+  const handleSave = () => {
+    dispatch(setProfileData(updatedProfile));
+    navigation.goBack();
+  };
+  const handleCameraLaunch = () => {
+    const options = {
+      mediaType: 'photo',
+      includeBase64: true,
+      cameraType: 'front',
+      maxHeight: 200,
+      maxWidth: 300,
+      quality: 1,
+    };
+    launchCamera(options, handleResponse);
+  };
+  const handleGalleryLaunch = () => {
+    const options = {
+      mediaType: 'photo',
+      includeBase64: true,
+      maxHeight: 200,
+      maxWidth: 300,
+      quality: 1,
+    };
+    launchImageLibrary(options, handleResponse);
+  };
+
+  const handleResponse = response => {
+    if (response.didCancel) {
+      console.log('User cancelled image picker');
+    } else if (response.error) {
+      console.log('Image picker error: ', response.error);
+    } else {
+      const imageUri = response.assets?.[0]?.uri || response.uri;
+      setUpdatedProfile({
+        ...updatedProfile,
+        profileImage: imageUri,
+      });
+      dispatch(updateProfileImage(imageUri));
+    }
+  };
+
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <LeftIcon />
+          <BackButton color="#000" />
         </TouchableOpacity>
 
         <Text style={styles.title}>Edit Profile</Text>
       </View>
       <View style={styles.imageContainer}>
         <View style={styles.image}>
-          <Image source={profile} style={styles.image} />
-          <TouchableOpacity style={styles.camera}>
+          <Image
+            source={{uri: updatedProfile.profileImage}}
+            style={styles.image}
+          />
+          <TouchableOpacity onPress={handleCameraLaunch} style={styles.camera}>
             <Camera />
           </TouchableOpacity>
         </View>
@@ -40,44 +108,40 @@ const EditProfile = () => {
             placeholder="Name"
             placeholderTextColor="#8F90A6"
             style={styles.input}
-            value="Sudip Ghosh"
+            value={updatedProfile.username}
+            onChangeText={text => handleInputChange('username', text)}
           />
           <Text style={styles.inputTitle}>Email</Text>
           <TextInput
             placeholder="Name"
             placeholderTextColor="#8F90A6"
             style={styles.input}
-            value="sudip@gmail.com"
+            value={updatedProfile.email}
+            onChangeText={text => handleInputChange('email', text)}
           />
           <Text style={styles.inputTitle}>Phone Number</Text>
           <TextInput
             placeholder="Name"
             placeholderTextColor="#8F90A6"
             style={styles.input}
-            value="1234567890"
-          />
-          <Text style={styles.inputTitle}>Phone Number</Text>
-          <TextInput
-            placeholder="Name"
-            secureTextEntry
-            placeholderTextColor="#8F90A6"
-            style={styles.input}
-            value="1234567890"
+            value={updatedProfile.phoneNumber}
+            onChangeText={text => handleInputChange('phoneNumber', text)}
           />
         </View>
       </ScrollView>
 
       <View style={styles.btnContainer}>
-        <Btn label="Save" bgColor="#6440FE" color="#fff" />
+        <Btn label="Save" bgColor="#6440FE" color="#fff" press={handleSave} />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
+    paddingHorizontal: 24,
+    paddingVertical: 15,
     backgroundColor: '#fff',
   },
   header: {

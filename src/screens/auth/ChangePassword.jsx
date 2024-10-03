@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Image,
   ScrollView,
+  SafeAreaView,
 } from 'react-native';
 import Btn from '../../components/Btn';
 import {useNavigation} from '@react-navigation/native';
@@ -26,7 +27,8 @@ const ChangePassword = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      {/* <View style={styles.inputContainer}> */}
       <Image
         source={require('../../assets/images/logo.png')} // Add your logo here
         style={styles.logo}
@@ -57,24 +59,27 @@ const ChangePassword = () => {
             value={confirmPassword}
             onChangeText={setConfirmPassword}
           />
-          <Btn label={'Update Password'} press={handleUpdatePassword} />
+          {/* </View> */}
         </ScrollView>
+        <Btn label={'Update Password'} press={handleUpdatePassword} />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    alignItems: 'center',
+    paddingHorizontal: 24,
+    paddingVertical: 15,
     backgroundColor: '#fff',
+    alignItems: 'center',
   },
+
   logo: {
     width: 100,
     height: 100,
-    marginBottom: 30,
+    marginBottom: 10,
   },
   title: {
     fontSize: 24,
@@ -90,7 +95,7 @@ const styles = StyleSheet.create({
   },
   instructions: {
     fontSize: 14,
-    color: '#545454',
+    color: '#54545470',
     marginBottom: 30,
   },
   input: {

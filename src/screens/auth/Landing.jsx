@@ -1,96 +1,3 @@
-// import React, {useRef, useState, useEffect} from 'react';
-// import {View, Text, Image, TouchableOpacity} from 'react-native';
-// import Carousel from 'react-native-snap-carousel';
-
-// const Landing = () => {
-//   const carouselRef = useRef(null);
-//   const [activeIndex, setActiveIndex] = useState(0);
-//   const [carouselItems] = useState([
-//     {
-//       image: require('../../assets/electrician.png'),
-//       text: 'For top-notch electrical work, hire a skilled, reliable, and experienced electrician.',
-//     },
-//     {
-//       image: require('../../assets/electrician.png'),
-//       text: 'Schedule the appointment in the best salon.',
-//     },
-//     {
-//       image: require('../../assets/electrician.png'),
-//       text: 'Search for the best parlour near you to fulfil all your beauty needs.',
-//     },
-//   ]);
-
-//   useEffect(() => {
-//     const interval = setInterval(() => {
-//       // Automatically scroll to next slide
-//       const nextIndex =
-//         activeIndex === carouselItems.length - 1 ? 0 : activeIndex + 1;
-//       setActiveIndex(nextIndex);
-//       carouselRef.current.snapToItem(nextIndex);
-//     }, 1000); // 1 second interval
-
-//     return () => clearInterval(interval); // Clear interval on component unmount
-//   }, [activeIndex, carouselItems.length]);
-
-//   const renderItem = ({item}) => (
-//     <View style={{justifyContent: 'center', alignItems: 'center', padding: 20}}>
-//       <Image
-//         source={item.image}
-//         style={{width: '100%', height: 300}}
-//         resizeMode="cover"
-//       />
-//       <Text
-//         style={{
-//           position: 'absolute',
-//           bottom: 100,
-//           color: 'white',
-//           fontSize: 18,
-//           fontWeight: 'bold',
-//           textAlign: 'center',
-//         }}>
-//         {item.text}
-//       </Text>
-//       <View
-//         style={{flexDirection: 'row', justifyContent: 'center', marginTop: 20}}>
-//         <TouchableOpacity
-//           style={{
-//             marginRight: 10,
-//             paddingHorizontal: 30,
-//             paddingVertical: 10,
-//             borderRadius: 5,
-//             borderWidth: 1,
-//             borderColor: 'white',
-//           }}>
-//           <Text style={{color: 'white'}}>Login</Text>
-//         </TouchableOpacity>
-//         <TouchableOpacity
-//           style={{
-//             paddingHorizontal: 30,
-//             paddingVertical: 10,
-//             borderRadius: 5,
-//             backgroundColor: '#6C63FF',
-//           }}>
-//           <Text style={{color: 'white'}}>Get started</Text>
-//         </TouchableOpacity>
-//       </View>
-//     </View>
-//   );
-
-//   return (
-//     <Carousel
-//       layout="default"
-//       ref={carouselRef}
-//       data={carouselItems}
-//       sliderWidth={400}
-//       itemWidth={400}
-//       renderItem={renderItem}
-//       onSnapToItem={index => setActiveIndex(index)}
-//     />
-//   );
-// };
-
-// export default Landing;
-
 import {useNavigation} from '@react-navigation/native';
 import React, {useState, useEffect, useRef} from 'react';
 import {
@@ -101,13 +8,14 @@ import {
   Dimensions,
   TouchableOpacity,
   StyleSheet,
+  SafeAreaView,
 } from 'react-native';
 
-const {width} = Dimensions.get('window'); // Get device width for responsive carousel
+const {width} = Dimensions.get('window');
 
 const images = [
   {
-    image: require('../../assets/images/electrician.png'), // Replace with your images
+    image: require('../../assets/images/electrician.png'),
     text: 'For top-notch electrical work, hire a skilled, reliable, and experienced electrician.',
   },
   {
@@ -142,7 +50,7 @@ const Landing = () => {
   };
   const navigation = useNavigation();
   return (
-    <View style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1}}>
       <ScrollView
         horizontal
         pagingEnabled
@@ -164,94 +72,95 @@ const Landing = () => {
               resizeMode="cover"
             />
             <View style={styles.tintLayer} />
-            <Text
-              style={{
-                position: 'absolute',
-                bottom: 140,
-                color: 'white',
-                fontSize: 33,
-                fontFamily: 'SpaceGrotesk-Bold',
-                letterSpacing: 0.25,
-                lineHeight: 45,
-                paddingHorizontal: 24,
-              }}>
-              {item.text}
-            </Text>
+            <Text style={styles.title}>{item.text}</Text>
           </View>
         ))}
       </ScrollView>
       <View style={{justifyContent: 'center', alignItems: 'center'}}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            marginVertical: 20,
-            position: 'absolute',
-            bottom: 100,
-          }}>
+        <View style={styles.dotContainer}>
           {images.map((_, index) => (
             <View
               key={index}
-              style={{
-                height: 7,
-                width: 7,
-                borderRadius: 7,
-                backgroundColor: currentIndex === index ? '#fff' : '#ffffff20',
-                marginHorizontal: 5.5,
-              }}
+              style={[styles.dot, currentIndex === index && styles.dotWhite]}
             />
           ))}
         </View>
 
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            gap: 26,
-            marginBottom: 20,
-            position: 'absolute',
-            bottom: 0,
-          }}>
+        <View style={styles.buttonContainer}>
           <TouchableOpacity
             onPress={() =>
               navigation.navigate('LoginRegister', {isLogin: true})
             }
-            style={{
-              paddingHorizontal: 60,
-              paddingVertical: 12,
-              borderRadius: 5,
-              borderWidth: 1,
-              borderColor: 'white',
-            }}>
-            <Text
-              style={{
-                color: 'white',
-                fontSize: 16,
-                fontFamily: 'SpaceGrotesk-Bold',
-              }}>
-              Login
-            </Text>
+            style={styles.loginContainer}>
+            <Text style={styles.loginText}>Login</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() =>
               navigation.navigate('LoginRegister', {isLogin: false})
             }
-            style={{
-              paddingHorizontal: 33,
-              paddingVertical: 12,
-              borderRadius: 5,
-              backgroundColor: '#fff',
-            }}>
-            <Text style={{color: '#6440FE', fontSize: 16, fontWeight: 'bold'}}>
-              Get started
-            </Text>
+            style={styles.GetStartedContainer}>
+            <Text style={styles.GetStartedText}>Get started</Text>
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
+  title: {
+    position: 'absolute',
+    bottom: 140,
+    color: 'white',
+    fontSize: 33,
+    fontFamily: 'SpaceGrotesk-Bold',
+    letterSpacing: 0.25,
+    lineHeight: 45,
+    paddingHorizontal: 24,
+  },
+  dotContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginVertical: 20,
+    position: 'absolute',
+    bottom: 100,
+  },
+  dot: {
+    height: 7,
+    width: 7,
+    borderRadius: 7,
+    backgroundColor: '#ffffff30',
+    marginHorizontal: 5.5,
+  },
+  dotWhite: {
+    backgroundColor: '#fff',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 26,
+    marginBottom: 20,
+    position: 'absolute',
+    bottom: 10,
+  },
+  loginContainer: {
+    paddingHorizontal: 60,
+    paddingVertical: 12,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: 'white',
+  },
+  loginText: {
+    color: 'white',
+    fontSize: 16,
+    fontFamily: 'SpaceGrotesk-Bold',
+  },
+  GetStartedContainer: {
+    paddingHorizontal: 33,
+    paddingVertical: 12,
+    borderRadius: 5,
+    backgroundColor: '#fff',
+  },
+  GetStartedText: {color: '#6440FE', fontSize: 16, fontWeight: 'bold'},
   tintLayer: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',

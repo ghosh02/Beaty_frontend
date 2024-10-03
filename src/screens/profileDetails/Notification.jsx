@@ -6,6 +6,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  SafeAreaView,
 } from 'react-native';
 import BackButton from '../../components/BackButton';
 
@@ -70,7 +71,7 @@ const renderNotificationItem = ({item}) => (
 );
 const Notification = () => {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <BackButton color="#000" />
         <Text style={styles.title}>Notifications</Text>
@@ -81,14 +82,15 @@ const Notification = () => {
         renderItem={renderNotificationItem}
         showsVerticalScrollIndicator={false}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
+    paddingHorizontal: 24,
+    paddingVertical: 15,
     backgroundColor: '#fff',
   },
   header: {
@@ -100,7 +102,7 @@ const styles = StyleSheet.create({
   title: {
     color: '#1C1C28',
     fontWeight: 'bold',
-    fontSize: 24,
+    fontSize: 20,
   },
   notification: {
     marginBottom: 10,
@@ -116,7 +118,7 @@ const styles = StyleSheet.create({
   timeText: {
     marginTop: 5,
     fontSize: 12,
-    color: '#32343E',
+    color: '#32343E50',
   },
 
   default: {

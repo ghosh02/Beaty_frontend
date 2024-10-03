@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
+  SafeAreaView,
 } from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import {setDefaultCard} from '../../store/cardSlice';
@@ -81,18 +82,12 @@ const PaymentMethodScreen = ({navigation}) => {
   );
 
   return (
-    <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <View style={styles.header}>
-          <BackButton color={'#000'} />
-          <Text style={styles.title}>Payment Methods</Text>
-        </View>
-        {cards.length > 0 && (
-          <TouchableOpacity onPress={() => navigation.navigate('AddCard')}>
-            <AddCircle color="#000" />
-          </TouchableOpacity>
-        )}
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <BackButton color={'#000'} />
+        <Text style={styles.title}>Payment Methods</Text>
       </View>
+
       {cards.length > 0 ? (
         <FlatList
           showsVerticalScrollIndicator={false}
@@ -103,36 +98,34 @@ const PaymentMethodScreen = ({navigation}) => {
       ) : (
         <View style={styles.emptyMessageContainer}>
           <Text style={styles.emptyMessage}>No Card Added</Text>
-          <TouchableOpacity
-            style={styles.addContainer}
-            onPress={() => navigation.navigate('AddCard')}>
-            <AddCircle />
-            <Text style={styles.addText}>Add Now</Text>
-          </TouchableOpacity>
         </View>
       )}
-    </View>
+      <Btn
+        label="Add Payment Method"
+        press={() => navigation.navigate('AddCard')}
+      />
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {flex: 1, padding: 24},
+  container: {
+    flex: 1,
+    paddingHorizontal: 24,
+    paddingVertical: 15,
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
+    marginBottom: 20,
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
     color: '#1C1C28',
   },
-  headerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
+
   cardImageContainer: {
     width: 70,
     height: 70,

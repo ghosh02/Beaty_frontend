@@ -5,9 +5,11 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  SafeAreaView,
 } from 'react-native';
 import {CloseIcon, Down, RightIcon} from '../../assets/Icon/IconName';
 import {useNavigation} from '@react-navigation/native';
+import BackButton from '../../components/BackButton';
 
 const About = () => {
   const [isTermsExpanded, setIsTermsExpanded] = useState(false);
@@ -31,10 +33,10 @@ const About = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <CloseIcon />
+          <BackButton color="#000" />
         </TouchableOpacity>
         <Text style={styles.header}>About</Text>
       </View>
@@ -79,14 +81,15 @@ const About = () => {
           </Text>
         )}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
+    paddingHorizontal: 24,
+    paddingVertical: 15,
     backgroundColor: '#fff',
   },
   headerContainer: {
@@ -97,7 +100,7 @@ const styles = StyleSheet.create({
   },
 
   header: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
     color: '#1C1C28',
   },

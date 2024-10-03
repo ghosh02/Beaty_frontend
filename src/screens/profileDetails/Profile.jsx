@@ -8,10 +8,12 @@ import {
   FlatList,
   Image,
   Modal,
+  SafeAreaView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {RightIcon} from '../../assets/Icon/IconName';
+import {CloseIcon, RightIcon} from '../../assets/Icon/IconName';
 import {BlurView} from '@react-native-community/blur';
+import {useSelector} from 'react-redux';
 
 // Define the list of menu items
 const menuItems = [
@@ -61,6 +63,11 @@ const menuItems = [
 
 // Main Profile Modal component
 const Profile = ({navigation}) => {
+  const {username, email, phoneNumber, profileImage} = useSelector(
+    state => state.profile,
+  );
+  console.log(username);
+  const [isModalVisible, setModalVisible] = useState(false);
   const renderItem = ({item}) => (
     <TouchableOpacity
       style={styles.menuItem}
@@ -83,20 +90,19 @@ const Profile = ({navigation}) => {
       <RightIcon color="#000" />
     </TouchableOpacity>
   );
-  const [isModalVisible, setModalVisible] = useState(false);
 
+  const confirmLogout = () => {
+    navigation.navigate('LoginRegister', {isLogin: true});
+  };
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.profile}>
         <View style={styles.profileHeader}>
-          <Image
-            source={{uri: 'https://via.placeholder.com/100'}}
-            style={styles.profileImage}
-          />
+          <Image source={{uri: profileImage}} style={styles.profileImage} />
           <View>
-            <Text style={styles.profileName}>John Doe</Text>
-            <Text style={styles.profileInfo}>+91 4842989351</Text>
-            <Text style={styles.profileInfo}>johndoe@gmail.com</Text>
+            <Text style={styles.profileName}>{username}</Text>
+            <Text style={styles.profileInfo}>{phoneNumber}</Text>
+            <Text style={styles.profileInfo}>{email}</Text>
           </View>
         </View>
         <TouchableOpacity
@@ -112,7 +118,6 @@ const Profile = ({navigation}) => {
         data={menuItems}
         renderItem={renderItem}
         keyExtractor={item => item.id}
-        contentContainerStyle={styles.listContainer}
       />
       <Modal
         visible={isModalVisible}
@@ -127,9 +132,14 @@ const Profile = ({navigation}) => {
 
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Delete Address?</Text>
+            <View style={styles.modalCloseButton}>
+              <Text style={styles.modalTitle}>Log out?</Text>
+              <TouchableOpacity onPress={() => setModalVisible(false)}>
+                <CloseIcon />
+              </TouchableOpacity>
+            </View>
             <Text style={styles.modalDescription}>
-              Are you want to log out?
+              Are you want to log out from the app?
             </Text>
 
             <View style={styles.buttonContainer}>
@@ -140,7 +150,7 @@ const Profile = ({navigation}) => {
               </TouchableOpacity>
 
               <TouchableOpacity
-                // onPress={confirmDelete}
+                onPress={confirmLogout}
                 style={styles.deleteButton}>
                 <Text style={styles.deleteButtonText}>Log out</Text>
               </TouchableOpacity>
@@ -148,14 +158,15 @@ const Profile = ({navigation}) => {
           </View>
         </View>
       </Modal>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
+    paddingHorizontal: 24,
+    paddingVertical: 15,
     backgroundColor: '#fff',
   },
   profile: {
@@ -163,7 +174,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    paddingBottom: 32,
+    paddingBottom: 20,
     borderBottomWidth: 1,
     borderColor: '#8F90A640',
   },
@@ -196,14 +207,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  listContainer: {
-    paddingBottom: 32,
-  },
+
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 15,
-    paddingVertical: 16,
+    paddingVertical: 13,
   },
   menuContent: {
     flex: 1,
@@ -211,7 +220,7 @@ const styles = StyleSheet.create({
   menuTitle: {
     fontSize: 15,
     color: '#1C1C28',
-    fontWeight: 'bold',
+    fontWeight: '500',
   },
   menuSubtitle: {
     fontSize: 10,
@@ -219,6 +228,7 @@ const styles = StyleSheet.create({
   },
   blurConatiner: {
     position: 'absolute',
+
     top: 0,
     left: 0,
     bottom: 0,
@@ -231,21 +241,25 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: '#fff',
-    paddingVertical: 30,
-    paddingHorizontal: 20,
+    paddingBottom: 30,
+    paddingTop: 15,
+    paddingHorizontal: 24,
     width: '100%',
+  },
+  modalCloseButton: {
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
   },
   modalTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 20,
     color: '#1C1C28',
   },
   modalDescription: {
     fontSize: 16,
     marginBottom: 20,
-    textAlign: 'center',
     color: '#8F90A6',
   },
   buttonContainer: {
@@ -254,26 +268,29 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   cancelButton: {
-    backgroundColor: '#f0f0f0',
-    padding: 10,
-    borderRadius: 5,
-    width: '45%',
+    paddingVertical: 15,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#6440FE',
+    width: '40%',
     alignItems: 'center',
   },
   cancelButtonText: {
-    color: '#000',
+    color: '#6440FE',
     fontWeight: 'bold',
+    fontSize: 16,
   },
   deleteButton: {
     backgroundColor: '#FF3B30',
-    padding: 10,
-    borderRadius: 5,
+    paddingVertical: 15,
+    borderRadius: 8,
     width: '40%',
     alignItems: 'center',
   },
   deleteButtonText: {
     color: '#fff',
     fontWeight: 'bold',
+    fontSize: 16,
   },
 });
 

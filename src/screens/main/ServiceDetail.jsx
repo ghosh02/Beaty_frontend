@@ -7,6 +7,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  SafeAreaView,
 } from 'react-native';
 import {DownIcon, Star} from '../../assets/Icon/IconName';
 import BackBtn from '../../components/BackBtn';
@@ -51,7 +52,7 @@ const ServiceDetail = ({route}) => {
     });
   };
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.imageContainer}>
         <Image source={selectedImage} style={styles.image} />
 
@@ -113,7 +114,7 @@ const ServiceDetail = ({route}) => {
         )}
       />
       {/* </ScrollView> */}
-    </View>
+    </SafeAreaView>
   );
 };
 

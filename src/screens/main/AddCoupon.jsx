@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {
   Button,
+  SafeAreaView,
   StyleSheet,
   Text,
   TextInput,
@@ -32,7 +33,7 @@ const AddCoupon = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
         <BackButton color="#1C1C28" />
         <Text style={styles.header}>Offers & Promo Codes</Text>
@@ -53,14 +54,15 @@ const AddCoupon = () => {
           <Text style={styles.text}>Apply</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
+    paddingHorizontal: 24,
+    paddingVertical: 15,
     backgroundColor: '#fff',
   },
   headerContainer: {
@@ -70,7 +72,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   header: {
-    fontSize: 24,
+    fontSize: 20,
     color: '#1C1C28',
     fontWeight: 'bold',
   },

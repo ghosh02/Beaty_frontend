@@ -38,7 +38,13 @@ export const CloseIcon = ({color = '#000'}) => {
   return <Icons.MaterialIcons name={'close'} size={24} color={color} />;
 };
 export const Back = ({color = '#fff'}) => {
-  return <Icons.FontAwesome5 name={'arrow-left'} size={20} color={color} />;
+  return (
+    <Icons.MaterialCommunityIcons
+      name={'keyboard-backspace'}
+      size={28}
+      color={color}
+    />
+  );
 };
 export const Plus = ({color = '#6440FE'}) => {
   return <Icons.AntDesign name={'plus'} size={16} color={color} />;

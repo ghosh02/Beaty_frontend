@@ -8,6 +8,7 @@ import {
   StyleSheet,
   ScrollView,
   Linking,
+  SafeAreaView,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {addService, removeService} from '../../store/selectedServicesSlice';
@@ -160,7 +161,7 @@ const ShopDetails = ({route}) => {
     });
   };
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.imageContainer}>
         <Image source={image} style={styles.image} />
 
@@ -267,7 +268,7 @@ const ShopDetails = ({route}) => {
           )}
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

@@ -492,6 +492,7 @@ import {
   Animated,
   FlatList,
   Image,
+  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -518,12 +519,14 @@ import ac from '../../assets/imageIcons/airconditioner.png';
 import plumber from '../../assets/imageIcons/wrenchtool.png';
 import carpenter from '../../assets/imageIcons/carpenter.png';
 import pin from '../../assets/images/pin.png';
+import {useSelector} from 'react-redux';
 
 const Home = () => {
   const navigation = useNavigation();
   const [isFocused, setIsFocused] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [filteredShops, setFilteredShops] = useState([]);
+  const {username, profileImage} = useSelector(state => state.profile);
   const services = [
     {
       title: 'Women Beauty',
@@ -608,7 +611,7 @@ const Home = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/* Header */}
       {!isFocused && (
         <View style={styles.header}>
@@ -629,13 +632,14 @@ const Home = () => {
                 fontSize: 16,
                 fontFamily: 'SpaceGrotesk-Bold',
               }}>
-              John Doe
+              {username}
             </Text>
             <DownIcon />
           </View>
           <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
             <Image
-              source={require('../../assets/images/profile.png')}
+              source={{uri: profileImage}}
+              // source={require('../../assets/images/profile.png')}
               style={{
                 width: 32,
                 height: 32,
@@ -831,7 +835,7 @@ const Home = () => {
           </View>
         </ScrollView>
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -839,7 +843,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    padding: 24,
+    paddingHorizontal: 24,
+    paddingVertical: 15,
   },
   header: {
     flexDirection: 'row',

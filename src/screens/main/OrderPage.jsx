@@ -1,5 +1,12 @@
 import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, FlatList, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  FlatList,
+  StyleSheet,
+  SafeAreaView,
+} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   selectPastOrders,
@@ -11,6 +18,7 @@ import {
 } from '../../store/ordersSlice';
 import {Heart, Heartfill} from '../../assets/Icon/IconName';
 import {useNavigation} from '@react-navigation/native';
+import BackButton from '../../components/BackButton';
 
 const OrderPage = () => {
   const navigation = useNavigation();
@@ -154,8 +162,11 @@ const OrderPage = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Your Bookings</Text>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.headerContainer}>
+        <BackButton color="#000" />
+        <Text style={styles.header}>Your Bookings</Text>
+      </View>
 
       {/* Tab Buttons */}
       <View style={styles.tabContainer}>
@@ -211,20 +222,26 @@ const OrderPage = () => {
           <Text style={styles.emptyMessage}>No orders found.</Text>
         }
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    paddingHorizontal: 24,
+    paddingVertical: 15,
     backgroundColor: '#fff',
   },
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 32,
+  },
   header: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 10,
     color: '#1C1C28',
   },
   tabContainer: {

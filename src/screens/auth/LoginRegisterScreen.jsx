@@ -7,11 +7,15 @@ import {
   StyleSheet,
   Switch,
   ScrollView,
+  SafeAreaView,
 } from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {Check, Eye, EyeOff} from '../../assets/Icon/IconName';
+import {useDispatch} from 'react-redux';
+import {setSignupData} from '../../store/profileSlice';
 
 const LoginRegisterScreen = () => {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   const route = useRoute();
   const {isLogin: initialIsLogin} = route.params;
@@ -27,6 +31,7 @@ const LoginRegisterScreen = () => {
 
   const [registerData, setRegisterData] = useState({
     username: '',
+    phoneNumber: '',
     email: '',
     password: '',
     agreeToTerms: false,
@@ -59,20 +64,23 @@ const LoginRegisterScreen = () => {
     navigation.navigate('Home');
   };
   const handleRegisterSubmit = () => {
+    dispatch(setSignupData(registerData));
     console.log(registerData);
     setRegisterData({
       username: '',
       email: '',
       password: '',
+      phoneNumber: '',
       agreeToTerms: false,
     });
+    navigation.navigate('Home');
   };
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
         <View style={styles.header}>
           <Text style={styles.headerText}>Hello, There</Text>
@@ -185,9 +193,20 @@ const LoginRegisterScreen = () => {
               onChangeText={text => handleRegisterInputChange('username', text)}
               value={registerData.username}
             />
+            <Text style={styles.title}>Phone Number</Text>
+            <TextInput
+              placeholder="Enter your phone number"
+              placeholderTextColor="#9EA1AE"
+              style={styles.input}
+              onChangeText={text =>
+                handleRegisterInputChange('phoneNumber', text)
+              }
+              value={registerData.phoneNumber}
+              keyboardType="numeric"
+            />
             <Text style={styles.title}>Email Address</Text>
             <TextInput
-              placeholder="Enter your email or phone"
+              placeholder="Enter your email"
               placeholderTextColor="#9EA1AE"
               style={styles.input}
               onChangeText={text => handleRegisterInputChange('email', text)}
@@ -199,7 +218,7 @@ const LoginRegisterScreen = () => {
               <TextInput
                 placeholder="Enter your password"
                 placeholderTextColor="#9EA1AE"
-                style={{flex: 1, color: '#9EA1AE'}}
+                style={{flex: 1, color: '#1c1c28'}}
                 secureTextEntry={!showPassword}
                 onChangeText={text =>
                   handleRegisterInputChange('password', text)
@@ -234,7 +253,7 @@ const LoginRegisterScreen = () => {
           </ScrollView>
         </View>
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -316,7 +335,7 @@ const styles = StyleSheet.create({
   input: {
     borderWidth: 1.5,
     borderColor: '#F3F4F9',
-    color: '#9EA1AE',
+    color: '#1C1C28',
     fontFamily: 'SpaceGrotesk-Regular',
     padding: 16,
     borderRadius: 28,

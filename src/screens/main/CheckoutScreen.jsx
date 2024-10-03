@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  SafeAreaView,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -82,9 +83,9 @@ const CheckoutScreen = ({route}) => {
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <ScrollView>
-        <View style={{padding: 24}}>
+        <View style={{paddingHorizontal: 24, paddingVertical: 15}}>
           <View style={styles.headerContainer}>
             <BackButton color="#1C1C28" />
             <Text style={styles.header}>Checkout</Text>
@@ -219,19 +220,19 @@ const CheckoutScreen = ({route}) => {
           />
         </View>
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
   },
   headerContainer: {
     flexDirection: 'row',
-    gap: 20,
+    gap: 15,
     alignItems: 'center',
-    // marginBottom: 24,
   },
   dateContainer: {
     flexDirection: 'row',
@@ -245,7 +246,7 @@ const styles = StyleSheet.create({
     borderColor: '#8F90A6',
   },
   header: {
-    fontSize: 24,
+    fontSize: 20,
     fontFamily: 'SpaceGrotesk-Bold',
     color: '#1C1C28',
   },

@@ -5,6 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  SafeAreaView,
 } from 'react-native';
 import {useDispatch} from 'react-redux';
 import {addCard} from '../../store/cardSlice';
@@ -70,7 +71,7 @@ const AddCardScreen = ({navigation}) => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <BackButton color={'#000'} />
         <Text style={styles.title}>Add Card</Text>
@@ -123,14 +124,15 @@ const AddCardScreen = ({navigation}) => {
         </View>
       </View>
       <Btn label="Add Card" press={handleSaveCard} />
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
+    paddingHorizontal: 24,
+    paddingVertical: 15,
     backgroundColor: '#fff',
   },
   header: {

@@ -11,6 +11,7 @@ import {
   Alert,
   StyleSheet,
   ScrollView,
+  SafeAreaView,
 } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import {useDispatch, useSelector} from 'react-redux';
@@ -20,6 +21,7 @@ import {
   clearSelectedAddress,
 } from '../../store/addressSlice';
 import Btn from '../../components/Btn';
+import BackButton from '../../components/BackButton';
 
 const AddressForm = ({navigation}) => {
   const dispatch = useDispatch();
@@ -95,8 +97,12 @@ const AddressForm = ({navigation}) => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.mapContainer}></View>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <BackButton color={'#000'} />
+        <Text style={styles.maintitle}>Add Address</Text>
+      </View>
+      {/* <View style={styles.mapContainer}></View> */}
       <ScrollView
         contentContainerStyle={styles.addressScroll}
         showsVerticalScrollIndicator={false}>
@@ -115,6 +121,7 @@ const AddressForm = ({navigation}) => {
           placeholder="Pin Code"
           value={address.pinCode}
           onChangeText={text => setAddress({...address, pinCode: text})}
+          keyboardType="numeric"
         />
         <Text style={styles.title}>State</Text>
         <TextInput
@@ -148,16 +155,28 @@ const AddressForm = ({navigation}) => {
           <TouchableOpacity onPress={handleCurrentLocation}>
             <Text>Use current location</Text>
           </TouchableOpacity> */}
-
-        <Btn label="Save Address" press={handleSave} />
       </ScrollView>
-    </View>
+      <Btn label="Save Address" press={handleSave} />
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingHorizontal: 24,
+    paddingVertical: 15,
     backgroundColor: '#fff',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 20,
+  },
+  maintitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#1C1C28',
   },
 
   mapContainer: {
@@ -165,7 +184,7 @@ const styles = StyleSheet.create({
     height: 300,
   },
   addressScroll: {
-    padding: 24,
+    // padding: 24,
   },
   title: {
     fontSize: 16,
