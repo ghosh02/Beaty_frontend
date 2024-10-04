@@ -13,6 +13,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {Check, Eye, EyeOff} from '../../assets/Icon/IconName';
 import {useDispatch} from 'react-redux';
 import {setSignupData} from '../../store/profileSlice';
+import ErrorField from '../../components/ErrorField';
 
 const LoginRegisterScreen = () => {
   const dispatch = useDispatch();
@@ -36,13 +37,21 @@ const LoginRegisterScreen = () => {
     password: '',
     agreeToTerms: false,
   });
+  const [loginErrors, setLoginErrors] = useState({});
+  const [registerErrors, setRegisterErrors] = useState({});
 
   const handleLoginInputChange = (field, value) => {
     setLoginData({...loginData, [field]: value});
+    if (loginErrors[field]) {
+      setLoginErrors(prevErrors => ({...prevErrors, [field]: ''}));
+    }
   };
 
   const handleRegisterInputChange = (field, value) => {
     setRegisterData({...registerData, [field]: value});
+    if (registerErrors[field]) {
+      setRegisterErrors(prevErrors => ({...prevErrors, [field]: ''}));
+    }
   };
   const toggleLoginCheckbox = () => {
     setLoginData({...loginData, stayLogged: !loginData.stayLogged});
@@ -55,29 +64,92 @@ const LoginRegisterScreen = () => {
     });
   };
   const handleLoginSubmit = () => {
-    console.log(loginData);
-    setLoginData({
-      email: '',
-      password: '',
-      stayLogged: false,
-    });
-    navigation.navigate('Home');
+    if (validateLoginData()) {
+      console.log(loginData);
+      setLoginData({
+        email: '',
+        password: '',
+        stayLogged: false,
+      });
+      navigation.navigate('Home');
+    }
   };
   const handleRegisterSubmit = () => {
-    dispatch(setSignupData(registerData));
-    console.log(registerData);
-    setRegisterData({
-      username: '',
-      email: '',
-      password: '',
-      phoneNumber: '',
-      agreeToTerms: false,
-    });
-    navigation.navigate('Home');
+    if (validateRegisterData()) {
+      dispatch(setSignupData(registerData));
+      console.log(registerData);
+      setRegisterData({
+        username: '',
+        email: '',
+        password: '',
+        phoneNumber: '',
+        agreeToTerms: false,
+      });
+      navigation.navigate('Home');
+    }
   };
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
+  const validateLoginData = () => {
+    let errors = {};
+
+    if (!loginData.email) {
+      errors.email = 'Email is required';
+    } else if (!/^\S+@\S+\.\S+$/.test(loginData.email)) {
+      errors.email = 'Invalid email format';
+    }
+
+    if (!loginData.password) {
+      errors.password = 'Password is required';
+    }
+
+    setLoginErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const validateRegisterData = () => {
+    let errors = {};
+
+    if (!registerData.username) {
+      errors.username = 'Username is required';
+    }
+
+    if (!registerData.phoneNumber) {
+      errors.phoneNumber = 'Phone number is required';
+    } else if (registerData.phoneNumber.length !== 10) {
+      errors.phoneNumber = 'Invalid phone number format';
+    }
+
+    if (!registerData.password) {
+      errors.password = 'Password is required';
+    }
+
+    if (!registerData.agreeToTerms) {
+      errors.agreeToTerms = 'You must agree to the terms and conditions';
+    }
+
+    setRegisterErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const isLoginFormValid =
+    !loginErrors.email &&
+    !loginErrors.password &&
+    loginData.email !== '' &&
+    loginData.password !== '';
+
+  const isRegisterFormValid =
+    !registerErrors.username &&
+    registerData.username !== '' &&
+    !registerErrors.phoneNumber &&
+    registerData.phoneNumber !== '' &&
+    !registerErrors.email &&
+    registerData.email !== '' &&
+    !registerErrors.password &&
+    registerData.password !== '' &&
+    !registerErrors.agreeToTerms &&
+    registerData.agreeToTerms;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -123,7 +195,7 @@ const LoginRegisterScreen = () => {
             <Text style={styles.subtitle}>
               Make sure that you already have an account.
             </Text>
-            <Text style={styles.title}>Email Address</Text>
+            <Text style={[styles.title, {marginTop: 0}]}>Email Address</Text>
             <TextInput
               placeholder="Enter your email or phone"
               placeholderTextColor="#9EA1AE"
@@ -131,12 +203,13 @@ const LoginRegisterScreen = () => {
               onChangeText={text => handleLoginInputChange('email', text)}
               value={loginData.email}
             />
+            <ErrorField error={loginErrors.email} />
             <Text style={styles.title}>Password</Text>
             <View style={styles.passwordContainer}>
               <TextInput
                 placeholder="Enter your password"
                 placeholderTextColor="#9EA1AE"
-                style={{flex: 1, color: '#9EA1AE'}}
+                style={{flex: 1, color: '#1c1c28'}}
                 secureTextEntry={!showPassword}
                 onChangeText={text => handleLoginInputChange('password', text)}
                 value={loginData.password}
@@ -147,6 +220,7 @@ const LoginRegisterScreen = () => {
                 {showPassword ? <Eye /> : <EyeOff />}
               </TouchableOpacity>
             </View>
+            <ErrorField error={loginErrors.password} />
             <View style={styles.checkboxContainer}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <TouchableOpacity
@@ -171,7 +245,15 @@ const LoginRegisterScreen = () => {
                 </Text>
               </TouchableOpacity>
             </View>
-            <TouchableOpacity style={styles.button} onPress={handleLoginSubmit}>
+            <TouchableOpacity
+              style={[
+                styles.button,
+                isLoginFormValid
+                  ? styles.activeSubmitButton
+                  : styles.inactiveSubmitButton,
+              ]}
+              disabled={!isLoginFormValid}
+              onPress={handleLoginSubmit}>
               <Text style={styles.buttonText}>Login</Text>
             </TouchableOpacity>
           </ScrollView>
@@ -193,6 +275,7 @@ const LoginRegisterScreen = () => {
               onChangeText={text => handleRegisterInputChange('username', text)}
               value={registerData.username}
             />
+            <ErrorField error={registerErrors.username} />
             <Text style={styles.title}>Phone Number</Text>
             <TextInput
               placeholder="Enter your phone number"
@@ -204,6 +287,7 @@ const LoginRegisterScreen = () => {
               value={registerData.phoneNumber}
               keyboardType="numeric"
             />
+            <ErrorField error={registerErrors.phoneNumber} />
             <Text style={styles.title}>Email Address</Text>
             <TextInput
               placeholder="Enter your email"
@@ -212,6 +296,7 @@ const LoginRegisterScreen = () => {
               onChangeText={text => handleRegisterInputChange('email', text)}
               value={registerData.email}
             />
+            <ErrorField error={registerErrors.email} />
             <Text style={styles.title}>Password</Text>
 
             <View style={styles.passwordContainer}>
@@ -231,6 +316,7 @@ const LoginRegisterScreen = () => {
                 {showPassword ? <Eye /> : <EyeOff />}
               </TouchableOpacity>
             </View>
+            <ErrorField error={registerErrors.password} />
 
             <View style={styles.checkboxContainer}>
               <TouchableOpacity
@@ -245,9 +331,16 @@ const LoginRegisterScreen = () => {
                 I agree with the terms and conditions by creating an account
               </Text>
             </View>
+            <ErrorField error={registerErrors.agreeToTerms} />
             <TouchableOpacity
-              style={styles.button}
-              onPress={handleRegisterSubmit}>
+              style={[
+                styles.button,
+                isRegisterFormValid
+                  ? styles.activeSubmitButton
+                  : styles.inactiveSubmitButton,
+              ]}
+              onPress={handleRegisterSubmit}
+              disabled={!isRegisterFormValid}>
               <Text style={styles.buttonText}>Create Account</Text>
             </TouchableOpacity>
           </ScrollView>
@@ -324,7 +417,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'SpaceGrotesk-Bold',
     color: '#090D20',
-    marginBottom: 6,
+    marginBottom: 10,
+    marginTop: 10,
   },
   subtitle: {
     fontSize: 12,
@@ -339,7 +433,7 @@ const styles = StyleSheet.create({
     fontFamily: 'SpaceGrotesk-Regular',
     padding: 16,
     borderRadius: 28,
-    marginBottom: 16,
+    // marginBottom: 16,
   },
   passwordContainer: {
     flexDirection: 'row',
@@ -352,15 +446,20 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 16,
     borderRadius: 28,
-    marginBottom: 16,
+    // marginBottom: 16,
   },
 
   button: {
-    backgroundColor: '#6E38F7',
     padding: 16,
     borderRadius: 28,
     alignItems: 'center',
     marginTop: 30,
+  },
+  activeSubmitButton: {
+    backgroundColor: '#6E38F7',
+  },
+  inactiveSubmitButton: {
+    backgroundColor: '#6E38F750',
   },
   buttonText: {
     color: '#FFFFFF',
@@ -371,6 +470,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    marginTop: 16,
   },
   checkbox: {
     width: 24,

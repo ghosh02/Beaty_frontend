@@ -22,6 +22,7 @@ import {
 } from '../../store/addressSlice';
 import Btn from '../../components/Btn';
 import BackButton from '../../components/BackButton';
+import ErrorField from '../../components/ErrorField';
 
 const AddressForm = ({navigation}) => {
   const dispatch = useDispatch();
@@ -33,7 +34,7 @@ const AddressForm = ({navigation}) => {
     state: '',
     type: 'Home',
   });
-
+  const [errors, setErrors] = useState({});
   useEffect(() => {
     if (selectedAddress) {
       setAddress(selectedAddress);
@@ -87,14 +88,41 @@ const AddressForm = ({navigation}) => {
   };
 
   const handleSave = () => {
-    if (selectedAddress) {
-      dispatch(updateAddress(address));
-    } else {
-      dispatch(addAddress({...address, id: Date.now()}));
+    if (validateAddressData()) {
+      if (selectedAddress) {
+        dispatch(updateAddress(address));
+      } else {
+        dispatch(addAddress({...address, id: Date.now()}));
+      }
+      dispatch(clearSelectedAddress());
+      navigation.goBack();
     }
-    dispatch(clearSelectedAddress());
-    navigation.goBack();
   };
+  const validateAddressData = () => {
+    let newErrors = {};
+
+    if (!address.street) {
+      newErrors.street = 'Street is required';
+    }
+
+    if (!address.pinCode) {
+      newErrors.pinCode = 'Pin code is required';
+    }
+    if (!address.state) {
+      newErrors.state = 'State is required';
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };
+  const isAddressFormValid =
+    !errors.street &&
+    address.street !== '' &&
+    !errors.pinCode &&
+    address.pinCode !== '' &&
+    !errors.state &&
+    address.state !== '';
 
   return (
     <SafeAreaView style={styles.container}>
@@ -114,6 +142,7 @@ const AddressForm = ({navigation}) => {
           value={address.street}
           onChangeText={text => setAddress({...address, street: text})}
         />
+        <ErrorField error={errors.street} />
         <Text style={styles.title}>Pin code</Text>
         <TextInput
           placeholderTextColor="#6B6E82"
@@ -123,6 +152,7 @@ const AddressForm = ({navigation}) => {
           onChangeText={text => setAddress({...address, pinCode: text})}
           keyboardType="numeric"
         />
+        <ErrorField error={errors.pinCode} />
         <Text style={styles.title}>State</Text>
         <TextInput
           placeholderTextColor="#6B6E82"
@@ -131,8 +161,8 @@ const AddressForm = ({navigation}) => {
           value={address.state}
           onChangeText={text => setAddress({...address, state: text})}
         />
-
-        <View style={{flexDirection: 'row'}}>
+        <ErrorField error={errors.state} />
+        <View style={{flexDirection: 'row', marginTop: 15}}>
           {['Home', 'Work', 'Other'].map(labelOption => (
             <TouchableOpacity
               key={labelOption}
@@ -156,7 +186,12 @@ const AddressForm = ({navigation}) => {
             <Text>Use current location</Text>
           </TouchableOpacity> */}
       </ScrollView>
-      <Btn label="Save Address" press={handleSave} />
+      <Btn
+        label="Save Address"
+        press={handleSave}
+        bgColor={isAddressFormValid ? '#6440FE' : '#6440FE50'}
+        disabled={!isAddressFormValid}
+      />
     </SafeAreaView>
   );
 };
@@ -190,16 +225,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'SpaceGrotesk-Bold',
     color: '#090D20',
-    marginBottom: 6,
+    marginBottom: 10,
+    marginTop: 10,
   },
   input: {
     borderWidth: 1,
     borderColor: '#F3F4F9',
-    color: '#9EA1AE',
+    color: '#1C1C28',
     fontFamily: 'SpaceGrotesk-Regular',
     padding: 14,
     borderRadius: 8,
-    marginBottom: 15,
+    // marginBottom: 15,
     fontSize: 16,
     backgroundColor: '#F0F5FA',
   },

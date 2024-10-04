@@ -11,33 +11,72 @@ import {useDispatch} from 'react-redux';
 import {addCard} from '../../store/cardSlice';
 import BackButton from '../../components/BackButton';
 import Btn from '../../components/Btn';
+import ErrorField from '../../components/ErrorField';
 
 const AddCardScreen = ({navigation}) => {
-  const [cardName, setCardName] = useState('');
-  const [cardNumber, setCardNumber] = useState('');
-  const [expiry, setExpiry] = useState('');
-  const [cvv, setCvv] = useState('');
-  const [cardType, setCardType] = useState(null);
-  const dispatch = useDispatch();
-  const handleCardNumberChange = text => {
-    setCardNumber(text);
+  const [cardData, setCardData] = useState({
+    cardName: '',
+    cardNumber: '',
+    expiry: '',
+    cvv: '',
+    cardType: null,
+  });
+  const [errors, setErrors] = useState({});
 
-    const detectedCardType = getCard(text);
-    // console.log('detectedCardType', detectedCardType);
-    setCardType(detectedCardType);
+  const dispatch = useDispatch();
+
+  const handleInputChange = (field, value) => {
+    setCardData(prevState => ({
+      ...prevState,
+      [field]: value,
+    }));
+    if (errors[field]) {
+      setErrors(prevErrors => ({...prevErrors, [field]: ''}));
+    }
   };
-  // console.log(cardType);
+
+  // const handleCardNumberChange = text => {
+  //   setCardData(prevState => ({
+  //     ...prevState,
+  //     cardNumber: text,
+  //     cardType: getCard(text),
+  //   }));
+
+  // };
+
+  const handleCardNumberChange = text => {
+    setCardData(prevState => ({
+      ...prevState,
+      cardNumber: text,
+      cardType: getCard(text),
+    }));
+
+    if (text.length === 16) {
+      setErrors(prevErrors => ({
+        ...prevErrors,
+        cardNumber: '',
+      }));
+    } else if (text.length < 16) {
+      setErrors(prevErrors => ({
+        ...prevErrors,
+        cardNumber: 'Card number must be 16 digits',
+      }));
+    }
+  };
+
   const handleSaveCard = () => {
-    const card = {
-      id: Date.now(),
-      name: cardName,
-      cardNumber: cardNumber,
-      type: cardType,
-      expiry,
-      cvv,
-    };
-    dispatch(addCard(card));
-    navigation.goBack();
+    if (validateCardData()) {
+      const card = {
+        id: Date.now(),
+        name: cardData.cardName,
+        cardNumber: cardData.cardNumber,
+        type: cardData.cardType,
+        expiry: cardData.expiry,
+        cvv: cardData.cvv,
+      };
+      dispatch(addCard(card));
+      navigation.goBack();
+    }
   };
 
   const getCard = cardNumber => {
@@ -69,6 +108,44 @@ const AddCardScreen = ({navigation}) => {
       return 'Unknown';
     }
   };
+  const validateCardData = () => {
+    let newErrors = {};
+
+    if (!cardData.cardName) {
+      newErrors.cardName = 'Name on the card is required';
+    }
+
+    if (!cardData.cardNumber) {
+      newErrors.cardNumber = 'Card number is required';
+    } else if (cardData.cardNumber.length < 16) {
+      newErrors.cardNumber = 'Card number must be 16 digits';
+    }
+
+    if (!cardData.expiry) {
+      newErrors.expiry = 'Expiry date is required';
+    } else if (cardData.expiry.length !== 4) {
+      newErrors.expiry = 'Expiry date must be MMYY';
+    }
+
+    if (!cardData.cvv) {
+      newErrors.cvv = 'CVV is required';
+    } else if (cardData.cvv.length !== 3) {
+      newErrors.cvv = 'CVV must be 3 digits';
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };
+  const isCardFormValid =
+    !errors.cardName &&
+    cardData.cardName !== '' &&
+    !errors.cardNumber &&
+    cardData.cardNumber !== '' &&
+    !errors.expiry &&
+    cardData.expiry !== '' &&
+    !errors.cvv &&
+    cardData.cvv !== '';
 
   return (
     <SafeAreaView style={styles.container}>
@@ -82,32 +159,36 @@ const AddCardScreen = ({navigation}) => {
           placeholder="Name on the card"
           placeholderTextColor="#8F90A6"
           style={styles.input}
-          value={cardName}
-          onChangeText={setCardName}
+          value={cardData.cardName}
+          onChangeText={text => handleInputChange('cardName', text)}
         />
+        <ErrorField error={errors.cardName} />
 
         <Text style={styles.label}>Card number</Text>
         <TextInput
           placeholder="Enter card number"
           placeholderTextColor="#8F90A6"
           style={styles.input}
-          value={cardNumber}
+          value={cardData.cardNumber}
           onChangeText={handleCardNumberChange}
           maxLength={16}
           keyboardType="numeric"
         />
+        <ErrorField error={errors.cardNumber} />
 
         <View style={styles.row}>
           <View style={styles.column}>
             <Text style={styles.label}>Expiry</Text>
             <TextInput
-              placeholder="MM/YY"
+              placeholder="MMYY"
               placeholderTextColor="#8F90A6"
               style={styles.input}
-              value={expiry}
+              value={cardData.expiry}
               maxLength={4}
-              onChangeText={setExpiry}
+              onChangeText={text => handleInputChange('expiry', text)}
+              keyboardType="numeric"
             />
+            <ErrorField error={errors.expiry} />
           </View>
           <View style={styles.column}>
             <Text style={styles.label}>CVV</Text>
@@ -115,15 +196,22 @@ const AddCardScreen = ({navigation}) => {
               placeholder="CVV"
               placeholderTextColor="#8F90A6"
               style={styles.input}
-              value={cvv}
-              onChangeText={setCvv}
+              value={cardData.cvv}
+              onChangeText={text => handleInputChange('cvv', text)}
               maxLength={3}
               secureTextEntry={true}
+              keyboardType="numeric"
             />
+            <ErrorField error={errors.cvv} />
           </View>
         </View>
       </View>
-      <Btn label="Add Card" press={handleSaveCard} />
+      <Btn
+        label="Add Card"
+        bgColor={isCardFormValid ? '#6440FE' : '#6440FE50'}
+        disabled={!isCardFormValid}
+        press={handleSaveCard}
+      />
     </SafeAreaView>
   );
 };
@@ -146,14 +234,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#1C1C28',
   },
-  label: {fontSize: 16, marginVertical: 5, color: '#1C1C28'},
+  label: {fontSize: 16, marginVertical: 10, color: '#1C1C28'},
   input: {
     borderWidth: 1,
     borderColor: '#8F90A6',
     color: '#1C1C28',
     padding: 10,
     borderRadius: 8,
-    marginBottom: 10,
+    marginBottom: 0,
   },
   row: {flexDirection: 'row', justifyContent: 'space-between'},
   column: {flex: 1, marginRight: 10},

@@ -7,11 +7,13 @@ const Btn = ({
   bgColor = '#6440FE',
   color = '#fff',
   width = '100%',
+  disabled = false,
 }) => {
   return (
     <TouchableOpacity
       onPress={press}
-      style={[styles.button, {backgroundColor: bgColor, width: width}]}>
+      style={[styles.button, {backgroundColor: bgColor, width: width}]}
+      disabled={disabled}>
       <Text style={[styles.buttonText, {color: color}]}>{label}</Text>
     </TouchableOpacity>
   );
